@@ -15,6 +15,7 @@ import NGOSignIn from "./pages/NGOSignIn";
 import NGORegister from "./pages/NGORegister";
 import GetStarted from "./pages/GetStarted";
 import NotFound from "./pages/NotFound";
+import Footer from "./components/Footer";
 
 const queryClient = new QueryClient();
 
@@ -42,6 +43,7 @@ const App = () => (
               <Route path="*" element={<NotFound />} />
             </Routes>
           </main>
+          <Footer />
         </div>
       </BrowserRouter>
     </TooltipProvider>
