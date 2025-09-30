@@ -1,11 +1,11 @@
 import { useQuery } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
 
-export const useOpportunities = () => {
+export const useOpportunities = (filters = {}) => {
   return useQuery({
-    queryKey: ['opportunities'],
+    queryKey: ['opportunities', filters],
     queryFn: async () => {
-      const { data, error } = await supabase
+      let query = supabase
         .from('opportunities')
         .select(`
           *,
@@ -14,8 +14,31 @@ export const useOpportunities = () => {
             verified
           )
         `)
-        .eq('status', 'active')
-        .order('created_at', { ascending: false });
+        .eq('status', 'active');
+
+      // Apply search filter
+      if (filters.searchTerm) {
+        query = query.or(`title.ilike.%${filters.searchTerm}%,description.ilike.%${filters.searchTerm}%`);
+      }
+
+      // Apply location filter
+      if (filters.location) {
+        query = query.ilike('location', `%${filters.location}%`);
+      }
+
+      // Apply category filter
+      if (filters.category && filters.category !== 'all') {
+        query = query.eq('category', filters.category);
+      }
+
+      // Apply date filter
+      if (filters.date) {
+        query = query.gte('date', filters.date);
+      }
+
+      query = query.order('created_at', { ascending: false });
+
+      const { data, error } = await query;
 
       if (error) {
         throw new Error(error.message);

@@ -4,10 +4,85 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Separator } from "@/components/ui/separator";
 import { Textarea } from "@/components/ui/textarea";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { Mail, Lock, Building, Phone, Globe, MapPin, Shield, Users, Target } from "lucide-react";
+import { useState } from "react";
+import { useAuth } from "@/contexts/AuthContext";
+import { supabase } from "@/integrations/supabase/client";
+import { useToast } from "@/hooks/use-toast";
 
 const NGORegister = () => {
+  const [orgName, setOrgName] = useState("");
+  const [email, setEmail] = useState("");
+  const [phone, setPhone] = useState("");
+  const [website, setWebsite] = useState("");
+  const [address, setAddress] = useState("");
+  const [description, setDescription] = useState("");
+  const [password, setPassword] = useState("");
+  const [confirmPassword, setConfirmPassword] = useState("");
+  const [loading, setLoading] = useState(false);
+  const { signUp } = useAuth();
+  const { toast } = useToast();
+  const navigate = useNavigate();
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    
+    if (password !== confirmPassword) {
+      toast({
+        title: "Error",
+        description: "Passwords do not match",
+        variant: "destructive"
+      });
+      return;
+    }
+
+    setLoading(true);
+    
+    // Step 1: Create auth user
+    const { data: authData, error: authError } = await signUp(email, password, {
+      organization_name: orgName
+    });
+
+    if (authError) {
+      toast({
+        title: "Registration failed",
+        description: authError.message,
+        variant: "destructive"
+      });
+      setLoading(false);
+      return;
+    }
+
+    // Step 2: Create organization record
+    const { error: orgError } = await supabase
+      .from('organizations')
+      .insert({
+        name: orgName,
+        email: email,
+        phone: phone,
+        website: website,
+        address: address,
+        description: description
+      });
+
+    setLoading(false);
+
+    if (orgError) {
+      toast({
+        title: "Organization creation failed",
+        description: orgError.message,
+        variant: "destructive"
+      });
+    } else {
+      toast({
+        title: "Success!",
+        description: "Your organization has been registered. Please check your email to verify your account."
+      });
+      navigate("/ngo-signin");
+    }
+  };
+
   return (
     <div className="bg-gradient-to-br from-accent/5 via-primary/10 to-highlight/5">
       <div className="container mx-auto px-4 py-12">
@@ -85,7 +160,7 @@ const NGORegister = () => {
               </CardHeader>
               
               <CardContent className="p-8">
-                <form className="space-y-6">
+                <form onSubmit={handleSubmit} className="space-y-6">
                   <div>
                     <Label htmlFor="orgName" className="text-base font-semibold">Organization Name</Label>
                     <div className="relative mt-2">
@@ -94,6 +169,9 @@ const NGORegister = () => {
                         id="orgName" 
                         type="text"
                         placeholder="Your Organization Name"
+                        value={orgName}
+                        onChange={(e) => setOrgName(e.target.value)}
+                        required
                         className="pl-12 h-12 border-2 border-border/50 focus:border-primary"
                       />
                     </div>
@@ -107,6 +185,9 @@ const NGORegister = () => {
                         id="orgEmail" 
                         type="email"
                         placeholder="info@yourorganization.org"
+                        value={email}
+                        onChange={(e) => setEmail(e.target.value)}
+                        required
                         className="pl-12 h-12 border-2 border-border/50 focus:border-primary"
                       />
                     </div>
@@ -121,6 +202,8 @@ const NGORegister = () => {
                           id="phone" 
                           type="tel"
                           placeholder="+1 (555) 123-4567"
+                          value={phone}
+                          onChange={(e) => setPhone(e.target.value)}
                           className="pl-12 h-12 border-2 border-border/50 focus:border-primary"
                         />
                       </div>
@@ -134,6 +217,8 @@ const NGORegister = () => {
                           id="website" 
                           type="url"
                           placeholder="www.yourorganization.org"
+                          value={website}
+                          onChange={(e) => setWebsite(e.target.value)}
                           className="pl-12 h-12 border-2 border-border/50 focus:border-primary"
                         />
                       </div>
@@ -148,6 +233,8 @@ const NGORegister = () => {
                         id="address" 
                         type="text"
                         placeholder="123 Main Street, City, State, ZIP"
+                        value={address}
+                        onChange={(e) => setAddress(e.target.value)}
                         className="pl-12 h-12 border-2 border-border/50 focus:border-primary"
                       />
                     </div>
@@ -158,6 +245,8 @@ const NGORegister = () => {
                     <Textarea 
                       id="description" 
                       placeholder="Tell us about your organization's mission, vision, and the work you do..."
+                      value={description}
+                      onChange={(e) => setDescription(e.target.value)}
                       className="mt-2 border-2 border-border/50 focus:border-primary min-h-[120px]"
                     />
                   </div>
@@ -170,6 +259,10 @@ const NGORegister = () => {
                         id="password" 
                         type="password"
                         placeholder="Create a strong password"
+                        value={password}
+                        onChange={(e) => setPassword(e.target.value)}
+                        required
+                        minLength={6}
                         className="pl-12 h-12 border-2 border-border/50 focus:border-primary"
                       />
                     </div>
@@ -183,6 +276,10 @@ const NGORegister = () => {
                         id="confirmPassword" 
                         type="password"
                         placeholder="Confirm your password"
+                        value={confirmPassword}
+                        onChange={(e) => setConfirmPassword(e.target.value)}
+                        required
+                        minLength={6}
                         className="pl-12 h-12 border-2 border-border/50 focus:border-primary"
                       />
                     </div>
@@ -202,9 +299,9 @@ const NGORegister = () => {
                     </span>
                   </div>
 
-                  <Button size="lg" className="w-full bg-gradient-hero hover:opacity-90 h-12">
+                  <Button type="submit" size="lg" disabled={loading} className="w-full bg-gradient-hero hover:opacity-90 h-12">
                     <Building className="w-5 h-5 mr-2" />
-                    Submit Registration
+                    {loading ? "Submitting..." : "Submit Registration"}
                   </Button>
 
                   <div className="text-center text-sm text-muted-foreground bg-muted/30 p-4 rounded-lg">

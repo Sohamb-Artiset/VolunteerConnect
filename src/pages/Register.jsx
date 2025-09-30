@@ -3,10 +3,58 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Separator } from "@/components/ui/separator";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { Mail, Lock, User, Heart, Users, Building } from "lucide-react";
+import { useState } from "react";
+import { useAuth } from "@/contexts/AuthContext";
+import { useToast } from "@/hooks/use-toast";
 
 const Register = () => {
+  const [firstName, setFirstName] = useState("");
+  const [lastName, setLastName] = useState("");
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [confirmPassword, setConfirmPassword] = useState("");
+  const [loading, setLoading] = useState(false);
+  const { signUp } = useAuth();
+  const { toast } = useToast();
+  const navigate = useNavigate();
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    
+    if (password !== confirmPassword) {
+      toast({
+        title: "Error",
+        description: "Passwords do not match",
+        variant: "destructive"
+      });
+      return;
+    }
+
+    setLoading(true);
+    const { error } = await signUp(email, password, {
+      first_name: firstName,
+      last_name: lastName
+    });
+
+    setLoading(false);
+
+    if (error) {
+      toast({
+        title: "Registration failed",
+        description: error.message,
+        variant: "destructive"
+      });
+    } else {
+      toast({
+        title: "Success!",
+        description: "Account created successfully. Please check your email to verify your account."
+      });
+      navigate("/");
+    }
+  };
+
   return (
     <div className="bg-gradient-to-br from-primary/5 via-accent-light/10 to-highlight-light/5">
       <div className="container mx-auto px-4 py-12">
@@ -69,7 +117,7 @@ const Register = () => {
               </CardHeader>
               
               <CardContent className="p-8">
-                <form className="space-y-6">
+                <form onSubmit={handleSubmit} className="space-y-6">
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                     <div>
                       <Label htmlFor="firstName" className="text-base font-semibold">First Name</Label>
@@ -79,6 +127,9 @@ const Register = () => {
                           id="firstName" 
                           type="text"
                           placeholder="John"
+                          value={firstName}
+                          onChange={(e) => setFirstName(e.target.value)}
+                          required
                           className="pl-12 h-12 border-2 border-border/50 focus:border-primary"
                         />
                       </div>
@@ -92,6 +143,9 @@ const Register = () => {
                           id="lastName" 
                           type="text"
                           placeholder="Doe"
+                          value={lastName}
+                          onChange={(e) => setLastName(e.target.value)}
+                          required
                           className="pl-12 h-12 border-2 border-border/50 focus:border-primary"
                         />
                       </div>
@@ -106,6 +160,9 @@ const Register = () => {
                         id="email" 
                         type="email"
                         placeholder="john@example.com"
+                        value={email}
+                        onChange={(e) => setEmail(e.target.value)}
+                        required
                         className="pl-12 h-12 border-2 border-border/50 focus:border-primary"
                       />
                     </div>
@@ -119,6 +176,10 @@ const Register = () => {
                         id="password" 
                         type="password"
                         placeholder="Create a strong password"
+                        value={password}
+                        onChange={(e) => setPassword(e.target.value)}
+                        required
+                        minLength={6}
                         className="pl-12 h-12 border-2 border-border/50 focus:border-primary"
                       />
                     </div>
@@ -132,6 +193,10 @@ const Register = () => {
                         id="confirmPassword" 
                         type="password"
                         placeholder="Confirm your password"
+                        value={confirmPassword}
+                        onChange={(e) => setConfirmPassword(e.target.value)}
+                        required
+                        minLength={6}
                         className="pl-12 h-12 border-2 border-border/50 focus:border-primary"
                       />
                     </div>
@@ -151,8 +216,8 @@ const Register = () => {
                     </span>
                   </div>
 
-                  <Button size="lg" className="w-full bg-gradient-hero hover:opacity-90 h-12">
-                    Create Account
+                  <Button type="submit" size="lg" disabled={loading} className="w-full bg-gradient-hero hover:opacity-90 h-12">
+                    {loading ? "Creating Account..." : "Create Account"}
                   </Button>
 
                   <Separator className="my-6" />
