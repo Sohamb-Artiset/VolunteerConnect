@@ -24,7 +24,7 @@ const Header = () => {
               <Heart className="w-6 h-6 text-white" />
             </div>
             <div>
-              <h1 className="text-xl font-bold text-foreground">VolunteerCoonect</h1>
+              <h1 className="text-xl font-bold text-foreground">VolunteerConnect</h1>
               <p className="text-xs text-muted-foreground">Making impact together</p>
             </div>
           </Link>
