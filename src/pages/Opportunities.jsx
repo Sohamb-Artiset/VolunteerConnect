@@ -11,6 +11,7 @@ import { useOpportunities } from "@/hooks/useOpportunities";
 import { useAuth } from "@/contexts/AuthContext";
 import { supabase } from "@/integrations/supabase/client";
 import { useToast } from "@/hooks/use-toast";
+import { useNavigate } from "react-router-dom";
 import { MapPin, Calendar as CalendarIcon, Clock, Users, Search, Heart, Loader2 } from "lucide-react";
 import { useState } from "react";
 import { format } from "date-fns";
@@ -33,6 +34,7 @@ const Opportunities = () => {
   });
   const { user } = useAuth();
   const { toast } = useToast();
+  const navigate = useNavigate();
 
   const handleApply = async () => {
     if (!user) {
@@ -243,7 +245,11 @@ const Opportunities = () => {
                       <Heart className="w-4 h-4 mr-2" />
                       Apply Now
                     </Button>
-                    <Button variant="outline" size="sm">
+                    <Button 
+                      variant="outline" 
+                      size="sm"
+                      onClick={() => navigate(`/opportunities/${opportunity.id}`)}
+                    >
                       Learn More
                     </Button>
                   </div>

@@ -161,6 +161,7 @@ export type Database = {
           last_name: string | null
           location: string | null
           phone: string | null
+          role: string | null
           skills: string[] | null
           updated_at: string
           user_id: string
@@ -175,6 +176,7 @@ export type Database = {
           last_name?: string | null
           location?: string | null
           phone?: string | null
+          role?: string | null
           skills?: string[] | null
           updated_at?: string
           user_id: string
@@ -189,6 +191,7 @@ export type Database = {
           last_name?: string | null
           location?: string | null
           phone?: string | null
+          role?: string | null
           skills?: string[] | null
           updated_at?: string
           user_id?: string

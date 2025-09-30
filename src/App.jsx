@@ -16,6 +16,7 @@ import NGOSignIn from "./pages/NGOSignIn";
 import NGORegister from "./pages/NGORegister";
 import Dashboard from "./pages/Dashboard";
 import GetStarted from "./pages/GetStarted";
+import OpportunityDetail from "./pages/OpportunityDetail";
 import NotFound from "./pages/NotFound";
 import Footer from "./components/Footer";
 
@@ -34,6 +35,7 @@ const App = () => (
               <Routes>
                 <Route path="/" element={<Index />} />
                 <Route path="/opportunities" element={<Opportunities />} />
+                <Route path="/opportunities/:id" element={<OpportunityDetail />} />
                 <Route path="/organizations" element={<Organizations />} />
                 <Route path="/about" element={<About />} />
                 <Route path="/contact" element={<Contact />} />
