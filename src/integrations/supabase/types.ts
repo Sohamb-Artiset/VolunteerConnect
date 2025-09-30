@@ -49,6 +49,63 @@ export type Database = {
           },
         ]
       }
+      blog_posts: {
+        Row: {
+          author_name: string
+          content: string
+          featured_image_url: string | null
+          id: string
+          published_at: string
+          slug: string
+          title: string
+        }
+        Insert: {
+          author_name: string
+          content: string
+          featured_image_url?: string | null
+          id?: string
+          published_at?: string
+          slug: string
+          title: string
+        }
+        Update: {
+          author_name?: string
+          content?: string
+          featured_image_url?: string | null
+          id?: string
+          published_at?: string
+          slug?: string
+          title?: string
+        }
+        Relationships: []
+      }
+      notifications: {
+        Row: {
+          created_at: string
+          id: string
+          is_read: boolean
+          link_to: string | null
+          message: string
+          user_id: string
+        }
+        Insert: {
+          created_at?: string
+          id?: string
+          is_read?: boolean
+          link_to?: string | null
+          message: string
+          user_id: string
+        }
+        Update: {
+          created_at?: string
+          id?: string
+          is_read?: boolean
+          link_to?: string | null
+          message?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
       opportunities: {
         Row: {
           category: Database["public"]["Enums"]["opportunity_category"]
@@ -197,6 +254,51 @@ export type Database = {
           user_id?: string
         }
         Relationships: []
+      }
+      reviews: {
+        Row: {
+          comment: string | null
+          created_at: string
+          id: string
+          opportunity_id: string
+          rating: number
+          reviewee_organization_id: string
+          reviewer_id: string
+        }
+        Insert: {
+          comment?: string | null
+          created_at?: string
+          id?: string
+          opportunity_id: string
+          rating: number
+          reviewee_organization_id: string
+          reviewer_id: string
+        }
+        Update: {
+          comment?: string | null
+          created_at?: string
+          id?: string
+          opportunity_id?: string
+          rating?: number
+          reviewee_organization_id?: string
+          reviewer_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "reviews_opportunity_id_fkey"
+            columns: ["opportunity_id"]
+            isOneToOne: false
+            referencedRelation: "opportunities"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "reviews_reviewee_organization_id_fkey"
+            columns: ["reviewee_organization_id"]
+            isOneToOne: false
+            referencedRelation: "organizations"
+            referencedColumns: ["id"]
+          },
+        ]
       }
     }
     Views: {

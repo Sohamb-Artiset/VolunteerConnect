@@ -6,6 +6,7 @@ import { BrowserRouter, Routes, Route } from "react-router-dom";
 import { AuthProvider } from "@/contexts/AuthContext";
 import { ThemeProvider } from "next-themes";
 import Header from "@/components/Header";
+import ProtectedRoute from "@/components/ProtectedRoute";
 import Index from "./pages/Index";
 import Opportunities from "./pages/Opportunities";
 import Organizations from "./pages/Organizations";
@@ -20,6 +21,8 @@ import GetStarted from "./pages/GetStarted";
 import OpportunityDetail from "./pages/OpportunityDetail";
 import NotFound from "./pages/NotFound";
 import Footer from "./components/Footer";
+import Blog from "./pages/Blog";
+import BlogPost from "./pages/BlogPost";
 
 const queryClient = new QueryClient();
 
@@ -45,8 +48,17 @@ const App = () => (
                   <Route path="/register" element={<Register />} />
                   <Route path="/ngo-signin" element={<NGOSignIn />} />
                   <Route path="/ngo-register" element={<NGORegister />} />
-                  <Route path="/dashboard" element={<Dashboard />} />
+                  <Route 
+                    path="/dashboard" 
+                    element={
+                      <ProtectedRoute>
+                        <Dashboard />
+                      </ProtectedRoute>
+                    } 
+                  />
                   <Route path="/get-started" element={<GetStarted />} />
+                  <Route path="/blog" element={<Blog />} />
+                  <Route path="/blog/:slug" element={<BlogPost />} />
                   {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
                   <Route path="*" element={<NotFound />} />
                 </Routes>
