@@ -49,7 +49,7 @@ const Hero = () => {
                 Find Opportunities
               </Button>
             </Link>
-            <Link to="/organizations">
+            <Link to="/ngo-register">
               <Button 
                 size="lg" 
                 variant="outline" 

@@ -39,7 +39,6 @@ const About = () => {
         <section className="py-20 bg-gradient-to-br from-primary/10 via-accent-light/20 to-highlight-light/10">
           <div className="container mx-auto px-4 text-center">
             <h1 className="text-4xl md:text-6xl font-bold text-foreground mb-6">
-              About 
               <span className="text-transparent bg-clip-text bg-gradient-hero ml-3">
                 VolunteerConnect
               </span>
