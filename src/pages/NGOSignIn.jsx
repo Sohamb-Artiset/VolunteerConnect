@@ -3,10 +3,48 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Separator } from "@/components/ui/separator";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { Mail, Lock, Building, Shield, Users, Target } from "lucide-react";
+import { useState, useEffect } from "react";
+import { useAuth } from "@/contexts/AuthContext";
+import { useToast } from "@/hooks/use-toast";
 
 const NGOSignIn = () => {
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [loading, setLoading] = useState(false);
+  const { signIn, user } = useAuth();
+  const { toast } = useToast();
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    if (user) {
+      navigate("/dashboard");
+    }
+  }, [user, navigate]);
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    
+    setLoading(true);
+    const { error } = await signIn(email, password);
+    setLoading(false);
+
+    if (error) {
+      toast({
+        title: "Sign in failed",
+        description: error.message,
+        variant: "destructive"
+      });
+    } else {
+      toast({
+        title: "Success!",
+        description: "Signed in successfully"
+      });
+      navigate("/dashboard");
+    }
+  };
+
   return (
     <div className="bg-gradient-to-br from-accent/5 via-primary/10 to-highlight/5">
       <div className="container mx-auto px-4 py-12">
@@ -72,7 +110,7 @@ const NGOSignIn = () => {
               </CardHeader>
               
               <CardContent className="p-8">
-                <form className="space-y-6">
+                <form onSubmit={handleSubmit} className="space-y-6">
                   <div>
                     <Label htmlFor="org-email" className="text-base font-semibold">Organization Email</Label>
                     <div className="relative mt-2">
@@ -81,6 +119,9 @@ const NGOSignIn = () => {
                         id="org-email" 
                         type="email"
                         placeholder="organization@ngo.org"
+                        value={email}
+                        onChange={(e) => setEmail(e.target.value)}
+                        required
                         className="pl-12 h-12 border-2 border-border/50 focus:border-primary"
                       />
                     </div>
@@ -94,6 +135,9 @@ const NGOSignIn = () => {
                         id="org-password" 
                         type="password"
                         placeholder="Enter your password"
+                        value={password}
+                        onChange={(e) => setPassword(e.target.value)}
+                        required
                         className="pl-12 h-12 border-2 border-border/50 focus:border-primary"
                       />
                     </div>
@@ -109,9 +153,9 @@ const NGOSignIn = () => {
                     </Link>
                   </div>
 
-                  <Button size="lg" className="w-full bg-gradient-hero hover:opacity-90 h-12">
+                  <Button type="submit" size="lg" disabled={loading} className="w-full bg-gradient-hero hover:opacity-90 h-12">
                     <Building className="w-5 h-5 mr-2" />
-                    Sign In to Dashboard
+                    {loading ? "Signing In..." : "Sign In to Dashboard"}
                   </Button>
 
                   <Separator className="my-6" />

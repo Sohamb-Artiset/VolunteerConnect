@@ -3,10 +3,48 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Separator } from "@/components/ui/separator";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { Mail, Lock, Heart, Users, Building } from "lucide-react";
+import { useState, useEffect } from "react";
+import { useAuth } from "@/contexts/AuthContext";
+import { useToast } from "@/hooks/use-toast";
 
 const SignIn = () => {
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [loading, setLoading] = useState(false);
+  const { signIn, user } = useAuth();
+  const { toast } = useToast();
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    if (user) {
+      navigate("/");
+    }
+  }, [user, navigate]);
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    
+    setLoading(true);
+    const { error } = await signIn(email, password);
+    setLoading(false);
+
+    if (error) {
+      toast({
+        title: "Sign in failed",
+        description: error.message,
+        variant: "destructive"
+      });
+    } else {
+      toast({
+        title: "Success!",
+        description: "Signed in successfully"
+      });
+      navigate("/");
+    }
+  };
+
   return (
     <div className="bg-gradient-to-br from-primary/5 via-accent-light/10 to-highlight-light/5">
       <div className="container mx-auto px-4 py-12">
@@ -69,7 +107,7 @@ const SignIn = () => {
               </CardHeader>
               
               <CardContent className="p-8">
-                <form className="space-y-6">
+                <form onSubmit={handleSubmit} className="space-y-6">
                   <div>
                     <Label htmlFor="email" className="text-base font-semibold">Email Address</Label>
                     <div className="relative mt-2">
@@ -78,6 +116,9 @@ const SignIn = () => {
                         id="email" 
                         type="email"
                         placeholder="your@email.com"
+                        value={email}
+                        onChange={(e) => setEmail(e.target.value)}
+                        required
                         className="pl-12 h-12 border-2 border-border/50 focus:border-primary"
                       />
                     </div>
@@ -91,6 +132,9 @@ const SignIn = () => {
                         id="password" 
                         type="password"
                         placeholder="Enter your password"
+                        value={password}
+                        onChange={(e) => setPassword(e.target.value)}
+                        required
                         className="pl-12 h-12 border-2 border-border/50 focus:border-primary"
                       />
                     </div>
@@ -106,8 +150,8 @@ const SignIn = () => {
                     </Link>
                   </div>
 
-                  <Button size="lg" className="w-full bg-gradient-hero hover:opacity-90 h-12">
-                    Sign In
+                  <Button type="submit" size="lg" disabled={loading} className="w-full bg-gradient-hero hover:opacity-90 h-12">
+                    {loading ? "Signing In..." : "Sign In"}
                   </Button>
 
                   <Separator className="my-6" />

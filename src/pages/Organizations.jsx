@@ -1,60 +1,62 @@
+// src/pages/Organizations.jsx
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Badge } from "@/components/ui/badge";
+import { Link } from "react-router-dom";
 import { Search, MapPin, Users, Heart, Mail, Phone, Globe, Star } from "lucide-react";
 
 const mockOrganizations = [
   {
     id: 1,
-    name: "City Food Bank",
-    mission: "Eliminating hunger in our community by providing nutritious food and resources to families in need.",
-    location: "Downtown District",
-    founded: 1995,
-    volunteers: 150,
-    activeEvents: 8,
-    rating: 4.8,
+    name: "Pune Food Bank",
+    mission: "Providing nutritious meals and essential resources to underprivileged families across Pune.",
+    location: "Shivajinagar, Pune",
+    founded: 2000,
+    volunteers: 200,
+    activeEvents: 10,
+    rating: 4.9,
     categories: ["Food Security", "Community Support"],
     contact: {
-      email: "volunteer@cityfoodbank.org",
-      phone: "(555) 123-4567",
-      website: "cityfoodbank.org"
+      email: "info@punefoodbank.org",
+      phone: "(020) 1234-5678",
+      website: "punefoodbank.org"
     },
-    description: "For over 25 years, City Food Bank has been the cornerstone of food security in our community, serving over 10,000 meals monthly."
+    description: "Serving over 12,000 meals monthly, Pune Food Bank has been a lifeline for Pune's communities for over 20 years."
   },
   {
     id: 2,
-    name: "Green Earth Initiative",
-    mission: "Protecting and preserving our environment through community action, education, and sustainable practices.",
-    location: "Riverside District",
-    founded: 2010,
-    volunteers: 89,
-    activeEvents: 5,
-    rating: 4.9,
+    name: "Green Pune Initiative",
+    mission: "Promoting sustainability and environmental awareness through tree plantations and community programs.",
+    location: "Kothrud, Pune",
+    founded: 2012,
+    volunteers: 120,
+    activeEvents: 7,
+    rating: 4.8,
     categories: ["Environment", "Sustainability"],
     contact: {
-      email: "hello@greenearthinitiative.org",
-      phone: "(555) 987-6543",
-      website: "greenearthinitiative.org"
+      email: "hello@greenpune.org",
+      phone: "(020) 8765-4321",
+      website: "greenpune.org"
     },
-    description: "Dedicated to creating a cleaner, greener future through hands-on environmental projects and community education programs."
+    description: "Engaging local communities in eco-friendly projects, Green Pune Initiative has planted over 50,000 trees since inception."
   },
   {
     id: 3,
-    name: "Future Leaders Foundation",
-    mission: "Empowering youth through mentorship, education, and leadership development programs.",
-    location: "Northside Schools",
+    name: "Pune Youth Empowerment",
+    mission: "Empowering Pune's youth with skills, education, and leadership programs for holistic development.",
+    location: "Baner, Pune",
     founded: 2008,
-    volunteers: 75,
-    activeEvents: 12,
+    volunteers: 90,
+    activeEvents: 9,
     rating: 4.7,
     categories: ["Education", "Youth Development"],
     contact: {
-      email: "mentors@futureleaders.org",
-      phone: "(555) 456-7890",
-      website: "futureleaders.org"
+      email: "contact@pune-youth.org",
+      phone: "(020) 5678-1234",
+      website: "pune-youth.org"
     },
-    description: "Building tomorrow's leaders today through comprehensive mentorship and educational support programs."
+    description: "Focused on mentoring and skill development, Pune Youth Empowerment has reached over 5,000 young individuals."
   }
 ];
 
@@ -67,26 +69,23 @@ const Organizations = () => {
           <h1 className="text-4xl md:text-5xl font-bold text-foreground mb-6">
             Partner 
             <span className="text-transparent bg-clip-text bg-gradient-hero ml-3">
-              Organizations
+              Organizations in Pune
             </span>
           </h1>
           <p className="text-xl text-muted-foreground max-w-3xl mx-auto">
-            Meet the verified NGOs and nonprofit organizations making a real difference. 
-            Find the perfect match for your values and interests.
+            Explore verified NGOs and nonprofits making a difference in Pune. Connect with causes that match your passion.
           </p>
         </div>
 
         {/* Search Bar */}
         <div className="bg-card rounded-2xl shadow-card p-8 mb-12">
           <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-            <div className="md:col-span-2">
-              <div className="relative">
-                <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-muted-foreground w-5 h-5" />
-                <Input 
-                  placeholder="Search organizations by name, cause, or mission..."
-                  className="pl-12 h-12 text-lg border-2 border-border/50 focus:border-primary"
-                />
-              </div>
+            <div className="md:col-span-2 relative">
+              <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-muted-foreground w-5 h-5" />
+              <Input 
+                placeholder="Search organizations by name, cause, or mission..."
+                className="pl-12 h-12 text-lg border-2 border-border/50 focus:border-primary"
+              />
             </div>
             <Button size="lg" className="bg-gradient-hero hover:opacity-90 h-12">
               <Search className="w-5 h-5 mr-2" />
@@ -134,23 +133,17 @@ const Organizations = () => {
                 <p className="text-foreground font-medium mb-3 leading-relaxed">
                   "{org.mission}"
                 </p>
-                
                 <p className="text-muted-foreground mb-6 leading-relaxed">
                   {org.description}
                 </p>
-                
                 <div className="grid grid-cols-2 gap-4 mb-6 p-4 bg-accent-light rounded-lg">
                   <div className="text-center">
-                    <div className="flex items-center justify-center mb-1">
-                      <Users className="w-4 h-4 text-accent mr-1" />
-                    </div>
+                    <Users className="w-4 h-4 text-accent mx-auto mb-1" />
                     <div className="text-2xl font-bold text-accent">{org.volunteers}</div>
                     <div className="text-sm text-muted-foreground">Active Volunteers</div>
                   </div>
                   <div className="text-center">
-                    <div className="flex items-center justify-center mb-1">
-                      <Heart className="w-4 h-4 text-accent mr-1" />
-                    </div>
+                    <Heart className="w-4 h-4 text-accent mx-auto mb-1" />
                     <div className="text-2xl font-bold text-accent">{org.activeEvents}</div>
                     <div className="text-sm text-muted-foreground">Active Events</div>
                   </div>
@@ -171,7 +164,7 @@ const Organizations = () => {
                   </div>
                 </div>
                 
-                <div className="flex gap-2">
+                <div className="flex gap-2 flex-wrap">
                   <Button className="flex-1 bg-gradient-hero hover:opacity-90">
                     View Profile
                   </Button>
@@ -200,11 +193,13 @@ const Organizations = () => {
             Is Your Organization Missing?
           </h2>
           <p className="text-xl mb-8 text-white/90">
-            Join our network of verified NGOs and connect with passionate volunteers in your community.
+            Join our network of verified NGOs and connect with passionate volunteers in Pune.
           </p>
-          <Button size="lg" className="bg-white text-primary hover:bg-white/90 px-8">
-            Register Your NGO
-          </Button>
+          <Link to="/ngo-register">
+            <Button size="lg" className="bg-white text-primary hover:bg-white/90 px-8">
+              Register Your NGO
+            </Button>
+          </Link>
         </div>
       </div>
     </div>

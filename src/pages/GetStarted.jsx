@@ -273,9 +273,11 @@ const GetStarted = () => {
                 <p className="text-sm text-muted-foreground mb-4">
                   Register your NGO to connect with passionate volunteers
                 </p>
-                <Button variant="outline" className="border-accent text-accent hover:bg-accent hover:text-accent-foreground">
-                  Register Your NGO
-                </Button>
+                <Link to="/ngo-register">
+                  <Button variant="outline" className="border-accent text-accent hover:bg-accent hover:text-accent-foreground">
+                    Register Your NGO
+                  </Button>
+                </Link>
               </CardContent>
             </Card>
           </div>
